@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body {
+            background-image: url(img/bg_grid.jpg); 
+        }
+
+        p {
+            border: 1px solid #777;
+            width: 600px;
+            min-height: 100px;
+
+            /* 
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left:10px;
+            padding-right: 10px;
+             */
+
+            /* 같은의미 */             
+            padding: 10px 10px 10px 10px; /* 위, 오른쪽, 아래, 왼쪽 (시계방향) */
+            /* 같은의미 */
+            padding: 10px 10px; /* 위아래, 좌우  */   
+
+        }
+    </style>
+
+</head>
+<body>
+    
+    <h3>패딩은 무엇인가?</h3>
+    <p>
+        패딩은 border안쪽 여백입니다, 즉 테두리와 내용 사이의 여백입니다<br>
+        박스의 가로크기는 width(600px) + padding(20px) + border(2px) = 622px
+    </p>
+</body>
+</html>

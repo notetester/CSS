@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        p {border: 1px solid #333;  }
+        .tx1 {text-align: center; }/* 가운데정렬 */
+        .tx2 {text-align: left;} /* 왼쪽정렬 */
+        .tx3 {text-align: right;} /* 오른쪽정렬 */
+
+        /* vertical-align은 기준을 잡고 나란히 배치된 요소에에만 적용됩니다 */
+        .tx4 img {vertical-align: top;}
+        .tx5 img {vertical-align: bottom;}
+        .tx6 img {vertical-align: middle;}
+
+        /* 기준이되는 요소가 없을 때, 박스의 높이와 동일하게 line-height를 맞추면 됩니다 */
+        .box {height: 50px; line-height: 50px; text-align: center;}
+    </style>
+
+</head>
+<body>
+    <!-- 문단정렬 -->
+    <p class="tx1">안녕</p>
+    <p class="tx2">안녕</p>
+    <p class="tx3">안녕</p>
+    <p class="tx4">
+        안녕
+        <img src="img/css3.png" alt="">
+    </p>
+    <p class="tx5">
+        안녕
+        <img src="img/html5.png" alt="">
+    </p>
+    <p class="tx6">
+        안녕
+        <img src="img/jquery.png" alt="">
+    </p>
+
+    <p class="box">안녕</p>
+    <p class="box">안녕</p>
+
+
+
+
+</body>
+</html>

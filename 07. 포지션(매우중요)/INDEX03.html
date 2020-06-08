@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .list-wrap{
+            width: 50%;
+            margin: 0 auto;
+            border: 1px solid #777;
+            position: relative;
+            padding: 10px;
+        }
+        .list-img{
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .list-content{
+            padding-left: 65px;
+        }
+        textarea{
+            width: 100%;
+            box-sizing: border-box;
+            resize: vertical;
+            height: 56px;
+        }
+        .list-control{
+            padding-left: 65px;
+            overflow: hidden;
+        }
+        .list-input{
+            float: left;
+        }
+        input{
+            display: block;
+        }
+        .button{
+            float: right;
+        }
+        .reply-control{
+            height: 55px;
+        }
+    </style>
+</head>
+<body>
+    <div class="list-wrap">
+        <div class="list-img">
+            <img src="img/bgimg.png" alt="물고기" height="50">
+        </div>
+        <div class="list-content">
+            <textarea name="content" id="content" class="content" cols="30" rows="10" placeholder="댓글등록"></textarea>
+        </div>
+        <div class="list-control">
+            <div class="list-input">
+                <input type="text">
+                <input type="text">
+            </div>
+            <button class="button">등록하기</button>
+        </div>
+    </div>
+    <div class="list-wrap">
+        <div class="list-img">
+            <img src="img/bgimg.png" alt="물고기" height="50">
+        </div>
+        <div class="list-control reply-control">
+            <div class="list-input">
+                <h3>제목</h3>
+                <h4>내용</h4>
+            </div>
+            <button class="button">수정</button>
+            <button class="button">삭제</button>
+        </div>
+    </div>
+</body>
+</html>

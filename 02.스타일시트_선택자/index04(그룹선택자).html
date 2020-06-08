@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        /* ul, li가지고 있는 기본 리스트속성을 전부 제거 */
+        ul, li {list-style: none; }
+        .p1, .p2 {color:red;}
+        
+        /* li의 class명이 col이 포함된 모든 요소 선택 */
+        li[class*="col"] {color: aqua;}
+
+    </style>
+
+</head>
+<body>
+
+    
+
+    <p class="p1">그룹</p>
+    <b class="p2">그룹</b>
+
+    <!-- ctrl + shift + l 또는 alt + 마우스클릭  원하는 태그만 선택 -->
+    <ul>
+        <li class="col-1">리스트</li>
+        <li class="col-2">리스트</li>
+        <li class="col-3">리스트</li>
+        <li class="col-4">리스트</li>
+        <li class="col-5">리스트</li>
+    </ul>
+
+
+</body>
+</html>

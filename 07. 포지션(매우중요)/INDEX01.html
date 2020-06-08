@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .list{
+            width: 50%;
+            margin: 0 auto;
+            border: 1px solid #777;
+        }
+        .content{
+            position: relative;
+            position: absolute;
+            position: fixed;
+        }
+        p{
+            border: 1px solid #777;
+            height: 100px;
+        }
+        .inner1{
+            background-color: aqua;
+        }
+        .inner2{
+            background-color: blueviolet;
+            position: absolute;
+            position: relative;
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            width: 50px;
+            height: 50px;
+        }
+        .inner3{
+            background-color: forestgreen;
+        }
+    </style>
+</head>
+<body>
+    <div class="list">
+        <div class="content">
+            <p class="inner1">포지션</p>
+            <p class="inner2">포지션</p>
+            <p class="inner3">포지션</p>
+        </div>
+    </div>
+</body>
+</html>

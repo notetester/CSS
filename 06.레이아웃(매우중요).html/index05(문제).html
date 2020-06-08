@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+    
+        .list {
+            border: 1px solid;
+            box-sizing: border-box;
+            width: 50%;
+            margin: 0 auto;
+        }
+     
+        .list .mid {
+        
+            padding: 20px 20px;
+            border: 1px solid;
+        }
+        
+        .mid-inner {
+            overflow: hidden;
+
+        }
+
+        .mid-inner .reft,
+        .mid-inner .right {
+            box-sizing: border-box;
+            border: 1px solid;
+            width: 50%;
+            float: left;
+        }
+        
+    </style>
+</head>
+<body>
+    
+    <div class="list">
+        <div class="top">
+            탑
+        </div>
+        <div class="mid">
+            <div class="mid-inner">
+               <div class="reft">중간 패딩 위아래 20px</div>
+               <div class="right">중간 패딩 위아래 20px</div>
+            </div>
+        </div>
+        <div class="bottom">
+            바텀
+        </div>
+    
+        
+    </div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box{width: 50%;margin: 0 auto;border: 1px solid #777;background-color: aqua;}
+        /* 767px 사이즈 미만에서 해당 css가 적용(모바일) */
+        @media(max-width: 767px){
+            .box{display: none;}
+        }
+        .box2{
+            overflow: hidden;
+            width: 80%;
+            margin: 0 auto;
+            border: 1px solid #777;
+        }
+        .box2 .inner{
+            float: left;
+            width: 16.6666%;
+        }
+        @media(max-width: 767px){
+            .box2{
+                overflow: hidden;
+                width: 100%;
+                border: 1px solid #777;
+            }
+            .box2 .inner{
+                float: left;
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        ~~~~~~~~
+    </div>
+    <div class="box2">
+        <div class="inner">~~</div>
+        <div class="inner">~~</div>
+        <div class="inner">~~</div>
+        <div class="inner">~~</div>
+        <div class="inner">~~</div>
+        <div class="inner">~~</div>
+    </div>
+</body>
+</html>
