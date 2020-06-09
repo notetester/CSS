@@ -24,16 +24,21 @@
         .btn {border-radius: 0px;}
 
         /* 헤더 */
-
-
-
+        .navbar {background-color: #263238; border-radius: 0px;}
+        .navbar-brand {padding: 10px;} 
+        .nav a {color: white;} /* a색상변경 */
+        .nav > li > a:hover, .nav > li > a:focus {background-color: #304047;} /* a에 호버와 포커스시 가상선택자 변경 */
+        .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {background-color: #304047;} /* 드롭다운메뉴 호버와 포커스시 가상선택자 변경 */
+    
+        .navbar-toggle {border-color: #fff;}
+        .navbar-toggle .icon-bar {background-color: #fff;}
     </style>
 
 </head>
 <body>
     
     <header>
-        <nav class="navbar navbar-inverse">
+        <nav class="navbar">
             <div class="container-fluid">
               <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -41,22 +46,40 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">WebSiteName</a>
+
+                <!-- 로고를 넣는 영역 -->
+                <a class="navbar-brand" href="#"><img src="img/logo.svg" ></a>
+
               </div>
+
+              <!-- 네비바 안에 포함되는 컨텐츠 -->
               <div class="collapse navbar-collapse" id="myNavbar">
+                <!-- 좌측 메뉴 -->
                 <ul class="nav navbar-nav">
                   <li class="active"><a href="#">Home</a></li>
                   <li><a href="#">Page 1</a></li>
                   <li><a href="#">Page 2</a></li>
                   <li><a href="#">Page 3</a></li>
                 </ul>
+                
+                <!-- 우측 드롭다운 -->
                 <ul class="nav navbar-nav navbar-right">
-                  <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                  <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown">정보관리</a>
+
+                        <ul class="dropdown-menu">
+                          <li><a href="#"><span class="glyphicon glyphicon-log-in">로그인</span></a></li>
+                          <li><a href="#">Disabled</a></li>
+                          <li><a href="#">Active</a></li>
+                          <li><a href="#">Normal</a></li>
+                        </ul>
+                    </li>  
+
                 </ul>
               </div>
             </div>
           </nav>
+
     </header>
 
 
