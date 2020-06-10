@@ -14,51 +14,7 @@
 
     <!-- 가장 아래쪽에 개인디자인을 추가 -->
     <link rel="stylesheet" href="css/header.css">
-
-    <style>
-        /* 캐러셀 좌우측 버튼 */
-        .carousel-control.left {
-            background-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .0001) 100%);
-        }
-        .carousel-control.right {
-            background-image: linear-gradient(to right, rgba(0, 0, 0, .0001) 0%, rgba(0, 0, 0, 0) 100%);
-        }
-        /* 메인배너1 */
-        .main-banner1 {
-            background: linear-gradient(90deg,#0c151c 1.3125rem,transparent 1%) 50%,linear-gradient(#0c151c 1.3125rem,transparent 1%) 50%,#263747;
-            background-size: 1.5rem 1.5rem;
-            padding: 6rem 0;
-            color: #fff;
-        }
-        .banner-cap {text-align: center;}
-
-        /* 메인상품화면 */
-        /* a태그가 inline요소여서 이미지를 감싸지 못함. 블럭으로 변경 */
-        /* col속성이 float을 가지고 있기 때문에 부모요소 overflow:hidden */
-        .prod-list {overflow: hidden;} 
-        .prod-list, .prod-link {border: 1px solid #333; display: block; text-align: center;}
-        .prod-list, .prod-list > li[class*="col-"] {
-            padding: 5px;
-        }
-        .prod-link .arrow {
-            display: block;
-            position:absolute;
-            bottom:15px;
-            left:15px;
-            width: 50px;
-            line-height: 50px;
-            height: 50px;
-            color:white;
-            background-color: #d6d6d6;            
-        }
-        /* 호버시 기능 */
-        .prod-link:hover {border-color: #4285F4;   }
-        .prod-link > .hover {opacity: 0; width:100px; background-color: #4285F4;} 
-        .prod-link:hover > .arrow {opacity: 0;} /* link호버시 .arrow클래스 투명도 0 */
-        .prod-link:hover > .hover {opacity: 1;} /* link호버시 .hover클래스 투명도 1 */
-
-    </style>
-
+    <link rel="stylesheet" href="css/style.css">
 
 </head>
 <body>
