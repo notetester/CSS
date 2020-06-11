@@ -96,3 +96,47 @@
         }
         .form-control {border-radius: 0px;} /* 윤곽 */
         .form-control:focus {border-color: #555;}
+        
+        /*==========마이페이지폼==========
+        ===============================*/
+        .myinfo {margin: 0 auto; float: none;}
+        .tab-content {margin-top: 50px;}
+        .tab-style {background-color: #607D8B;}
+        .tab-style > li.active > a,
+        .tab-style > li.active > a:hover,
+        .tab-style > li.active > a:focus{background-color: #56707D; border:none; color: #fff;}
+        .tab-style > li > a {border: none; border-radius: 0px; margin: 0px;} 
+
+        /* 마이페이지 테이블 */
+        /* id,이름,비밀번호,비밀번호 확인란을 width:200px 이메일란을 가로로 배치 */
+        .m-control .sel, 
+        .m-control .sel2 {width: 180px; display: inline-block;} /* inline으로 배치하고 블럭성질을 갖는다 */
+
+        /*==========페이스북==========
+        ===========================*/
+        @media (max-width: 767px){
+            .aside-menu {display: none;}
+        }
+        
+        .aside-inner {margin-top: 20px;}
+        .aside-inner ul li a {text-decoration: none; color:#333333;}
+
+        .section-inner .text-content textarea {height: 50px; transition: height 0.5s ease-in-out;}
+        .section-inner .text-content textarea:focus {height:100px;}
+        .section-inner .text-group {overflow: hidden; margin-top: 10px;}
+        .section-inner .text-group .left {float: left;}
+        .section-inner .text-group .right {float: right;}
+        
+        .title-inner {padding:20px 0;}
+        .title-inner p {margin: 0;}
+        .title-inner {position: relative; } /* 부모릴레이티브 */
+        .title-inner .profile {position:absolute; top:20px; left:0px; } /* 자식 엡솔루트 */
+        .title-inner .title {padding-left: 50px}
+
+        .content-inner {padding: 10px 0;}
+
+        .like-inner {padding: 10px 0; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; margin-top: 10px;}
+
+        .link-inner {overflow: hidden; padding: 10px 0; border-bottom: 1px solid #ddd;}
+        .link-inner a { float: left; width: 33.3333%; text-align: center; text-decoration: none; color:#333333}
+        .link-inner i {margin: 0 5px;}

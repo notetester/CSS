@@ -16,11 +16,6 @@
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/style.css">
 
-    <style>
-        .myinfo {margin: 0 auto; float: none;}
-
-    </style>
-
 </head>
 <body>
     <header>
@@ -76,18 +71,78 @@
                     </div>
 
                     <!-- ctrl + k + f -->
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+                    <ul class="nav nav-tabs tab-style">
+                        <li class="active"><a data-toggle="tab" href="#info">Home</a></li>
                         <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
                         <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
                         <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
                     </ul>
                     
                     <div class="tab-content">
-                        <div id="home" class="tab-pane fade in active">
-                            <h3>HOME</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                                dolore magna aliqua.</p>
+                        <div id="info" class="tab-pane fade in active">
+
+                            <form>
+                                <p>*표시는 필수 사항입니다</p>
+                                <table class="table">
+                                    <tbody class="m-control">
+                                        <tr>
+                                            <td>*ID</td>
+                                            <td><input type="text" class="form-control sel"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>*이름</td>
+                                            <td><input type="text" class="form-control sel"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>*비밀번호</td>
+                                            <td><input type="text" class="form-control sel"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>*비밀번호 확인</td>
+                                            <td><input type="text" class="form-control sel"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>*이메일</td>
+                                            <td>
+                                                <input type="text" class="form-control sel2">@
+                                                <select class="form-control sel2">
+                                                    <option>naver.com</option>
+                                                    <option>gmail.com</option>
+                                                    <option>daum.net</option>
+                                                </select>
+                                                <button class="btn btn-info" type="button">중복확인</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>*우편번호</td>
+                                            <td>
+                                                <div class="input-group"> 
+                                                    <input type="text" class="form-control" readonly>
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-info" type="button">주소찾기</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>*주소</td>
+                                            <td><input type="text" class="form-control"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>*상세주소</td>
+                                            <td><input type="text" class="form-control"></td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>                                    
+                            </form>
+
+                            <div class="titlefoot" align="center">
+                                <button type="button" class="btn btn-default">수정</button>
+                                <button type="button" class="btn btn-default">목록</button>
+
+                            </div>
+
                         </div>
                         <div id="menu1" class="tab-pane fade">
                             <h3>Menu 1</h3>
@@ -109,6 +164,7 @@
             </div>
         </div>
     </section>
+
 
     <footer>
         <div class="container">
