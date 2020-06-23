@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        /* 박스레이아웃을 잡기전에 전체선택자로 기본요소들이 가지고 있는 마진, 패딩값을 없앰 */
+        * {margin: 0; padding: 0; }
+        /* ul, li는 목록을 정의하는 태그인데, 스타일을 초기값으로 지정 */
+        ul, li {list-style-type: none;}
+        
+        /* 
+        1. 자식에서 float을 이용해서 박스위치를 조정하면, 부모의 높이값이 지정되지 않는 현상을 
+        다음과 같은 방법으로 해제한다. 
+        .boxList:after {content:""; display: block; clear:both;}
+
+        2. 또는 부모요소에 overflow:hidden을 적용한다.
+
+        */
+        .boxList {
+            overflow: hidden;  
+            background-color: aqua;
+            margin: 0 auto;
+            width:50%;
+        }
+        .boxList div {
+            float: left;
+            border: 1px solid #777;
+            width: 16.6666%;
+            /* border, padding, width더한값이 실제 요소의 넓이 */
+            /* border는 box크기에 포함시키지 않는 방법. */
+            box-sizing: border-box; 
+        }
+
+    </style>
+
+
+
+</head>
+<body>
+    
+    <div class="boxList">
+
+        <div>박스1</div>
+        <div>박스2</div>
+        <div>박스3</div>
+        <div>박스4</div>
+        <div>박스5</div>
+        <div>박스6</div>
+        
+    </div>
+
+
+
+    <style>
+        .box {width:100px; height: 100px; background-color: aqua; overflow: /* auto; */ hidden;}    
+    </style>
+    <div class="box">
+        박스가 넘쳐흐느느데~~ 우와와오아와오아우와와오아와오아
+        우와와오아와오아
+        우와와오아와오아
+        우와와오아와오아우와와오아와오아우와와오아와오아
+    </div>
+
+
+
+</body>
+</html>
