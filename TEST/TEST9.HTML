@@ -1,0 +1,2134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="css/megabox.min.css">
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        var localeCode = "kr";			   //한영 구분 코드
+        $(function () {
+        });
+
+        function fn_setMeta(scnDiv) {
+            var paramData = null;
+
+            if (scnDiv == undefined) {
+
+                switch (tmpData.tabIndx) {
+
+                    case 0: //영화별
+                        url = location.protocol + '//' + document.domain + '/booking/timetable';
+                        paramData = {
+                            'scnTitle': '영화별 상영시간표 < 상영시간표 | 라이프씨어터, 메가박스'
+                            , 'metaTagTitle': '영화별상영시간표 < 상영시간표 | 라이프씨어터, 메가박스'
+                            , 'metaTagDtls': '메가박스의 영화별 상영시간표를 알려드립니다.'
+                            , 'metaTagKeyword': ''
+                            , 'metaTagUrl': url
+                        };
+                        break;
+
+                    case 1: //극장별
+                        url = location.protocol + '//' + document.domain + '/booking/timetable';
+                        paramData = {
+                            'scnTitle': '극장별 상영시간표 < 상영시간표 | 라이프씨어터, 메가박스'
+                            , 'metaTagTitle': '극장별상영시간표 < 상영시간표 | 라이프씨어터, 메가박스'
+                            , 'metaTagDtls': '메가박스의 극장별 상영시간표를 알려드립니다.'
+                            , 'metaTagKeyword': ''
+                            , 'metaTagUrl': url
+                        };
+                        break;
+
+                    case 2: //특별관
+                        url = location.protocol + '//' + document.domain + '/booking/timetable';
+                        paramData = {
+                            'scnTitle': '특별관 상영시간표 < 상영시간표 | 라이프씨어터, 메가박스'
+                            , 'metaTagTitle': '특별관상영시간표 < 상영시간표 | 라이프씨어터, 메가박스'
+                            , 'metaTagDtls': '메가박스의 특별관 상영시간표를 알려드립니다.'
+                            , 'metaTagKeyword': ''
+                            , 'metaTagUrl': url
+                        };
+                        break;
+                }
+
+            } else {
+                url = location.protocol + '//' + document.domain + '/booking';
+                paramData = {
+                    'scnTitle': '빠른예매 < 예매 | 라이프씨어터, 메가박스'
+                    , 'metaTagTitle': '빠른예매 < 예매 | 라이프씨어터, 메가박스'
+                    , 'metaTagDtls': '메가박스에서 영화를 간편하고 빠르게 예약해보세요.'
+                    , 'metaTagKeyword': ''
+                    , 'metaTagUrl': url
+                };
+            }
+
+            //이전버튼을 위한 현재 메타태그 정보 저장
+            saveCurrentMeta();
+
+            //URL 변경
+            history.replaceState(null, null, url);
+
+            //메타태그 설정
+            settingMeta(paramData);
+        }
+
+
+
+        //좌석도로 파라메타 전달
+        function fn_setSmapParam(param) {
+
+            NetfunnelChk.script("BOOK_STEP2", function () {
+
+                //param : 좌석도 화면 구동에 필요한 상영스케줄번호
+                //scnDiv : 네비게이션 표시를 위한 진입화면 구분 playTime : 예매 > 상영시간표, brch : 극장, spclBrch : 특별관
+                var frameBokdMSeatBodyObj = $('#frameBokdMSeat').get(0).contentWindow.document.body;	//좌석도 프레임 바디 오브젝트
+                var framePayBookingBodyObj = $('#framePayBooking').get(0).contentWindow.document.body;	//결제화면 프레임 바디 오브젝트
+                var frameBokdMSeatContentObj = $('#frameBokdMSeat').get(0).contentWindow;
+                var innerHtml = "<span>Home</span>";
+                var smapPlaySchdlNo = param[0];
+                var scnDiv = param[1];
+
+                fn_setMeta(scnDiv);
+
+                if ("default" == scnDiv) {
+                    innerHtml += "<a href=\"/booking\" title=\"/예매 페이지로 이동\">예매</a>";
+                    innerHtml += "<a href=\"/booking\" title=\"/빠른예매 페이지로 이동\">빠른예매</a>";
+                }
+                else if ("playTime" == scnDiv) {
+                    innerHtml += "<a href=\"/booking\" title=\"/예매 페이지로 이동\">예매</a>";
+                    innerHtml += "<a href=\"/booking/timetable\" title=\"/상영시간표 페이지로 이동\">상영시간표</a>";
+                }
+                else if ("brch" == scnDiv) {
+                    innerHtml += "<a href=\"/theater/list\" title=\"/극장 페이지로 이동\">극장</a>";
+                    innerHtml += "<a href=\"/theater/list\" title=\"/예매 페이지로 이동\">전체극장</a>";
+                    innerHtml += "<a href=\"\" title=\"/극장정보\">극장정보</a>";
+                }
+                else if ("TBQ" == scnDiv) {
+                    innerHtml += "<a href=\"/theater/list\" title=\"/극장 페이지로 이동\">극장</a>";
+                    innerHtml += "<a href=\"/on/oh/ohc/BrchSpecial/mainPage.do\" title=\"/특별관 페이지로 이동\">특별관</a>";
+                    innerHtml += "<a href=\"/on/oh/ohc/BrchSpecial/boutqInfoPage.do\" title=\"/부티크 페이지로 이동\">부티크</a>";
+                }
+                else if ("MX" == scnDiv) {
+                    innerHtml += "<a href=\"/theater/list\" title=\"/극장 페이지로 이동\">극장</a>";
+                    innerHtml += "<a href=\"/on/oh/ohc/BrchSpecial/mainPage.do\" title=\"/특별관 페이지로 이동\">특별관</a>";
+                    innerHtml += "<a href=\"/on/oh/ohc/BrchSpecial/mxInfoPage.do\" title=\"/MX 페이지로 이동\">MX</a>";
+                }
+                else if ("CFT" == scnDiv) {
+                    innerHtml += "<a href=\"/theater/list\" title=\"/극장 페이지로 이동\">극장</a>";
+                    innerHtml += "<a href=\"/on/oh/ohc/BrchSpecial/mainPage.do\" title=\"/특별관 페이지로 이동\">특별관</a>";
+                    innerHtml += "<a href=\"/on/oh/ohc/BrchSpecial/comfortInfoPage.do\" title=\"/COMFORT 페이지로 이동\">COMFORT</a>";
+                }
+                else if ("MKB" == scnDiv) {
+                    innerHtml += "<a href=\"/theater/list\" title=\"/극장 페이지로 이동\">극장</a>";
+                    innerHtml += "<a href=\"/on/oh/ohc/BrchSpecial/mainPage.do\" title=\"/특별관 페이지로 이동\">특별관</a>";
+                    innerHtml += "<a href=\"/on/oh/ohc/BrchSpecial/kidsInfoPage.do\" title=\"/MEGABOX KIDS 페이지로 이동\">MEGABOX KIDS</a>";
+                }
+                else if ("TFC" == scnDiv) {
+                    innerHtml += "<a href=\"/theater/list\" title=\"/극장 페이지로 이동\">극장</a>";
+                    innerHtml += "<a href=\"/on/oh/ohc/BrchSpecial/mainPage.do\" title=\"/특별관 페이지로 이동\">특별관</a>";
+                    innerHtml += "<a href=\"/on/oh/ohc/BrchSpecial/firstClubInfoPage.do\" title=\"/THE FIRST CLUB 페이지로 이동\">THE FIRST CLUB</a>";
+                }
+                else if ("BCY" == scnDiv) {
+                    innerHtml += "<a href=\"/theater/list\" title=\"/극장 페이지로 이동\">극장</a>";
+                    innerHtml += "<a href=\"/on/oh/ohc/BrchSpecial/mainPage.do\" title=\"/특별관 페이지로 이동\">특별관</a>";
+                    innerHtml += "<a href=\"/on/oh/ohc/BrchSpecial/balconyInfoPage.do\" title=\"/BALCONY 페이지로 이동\">BALCONY</a>";
+                }
+
+                $('#bokdContainer .inner-wrap .location').html(innerHtml);	//네비게이션 표시
+                $(frameBokdMSeatBodyObj).find(".quick-reserve h2").html('');	//좌석도 타이틀 숨김
+                $(framePayBookingBodyObj).find(".quick-reserve h2").html('');	//결제   타이틀 숨김
+
+                $('#bokdContainer').show();		//좌석도, 결제 컨테이너 보임
+                $('#schdlContainer').hide();	//상영시간표 컨테이너 숨김
+                $('#bokdMSeat').show();			//좌석도 보임
+                $(frameBokdMSeatBodyObj).find('#playSchdlNo').val(smapPlaySchdlNo);
+                frameBokdMSeatContentObj.fn_search();	//좌석도 좌석조회
+
+                // 	$('#frameBokdMSeat').attr('src','/on/oh/ohz/PcntSeatChoi/selectPcntSeatChoi.do?playSchdlNo='+obj.attr("play-schdl-no"));
+                // 	$('#frameBokdMSeat').attr('src','/main');
+            });
+        }
+
+        //좌석도에서 이전 버튼 클릭
+        function fn_goPrePagePcntSeatChoi() {
+            var frameBokdMSeatContentObj = $('#frameBokdMSeat').get(0).contentWindow;
+            $('#bokdContainer').hide();		//좌석도, 결제 컨테이너 보임
+            $('#schdlContainer').show();	//상영시간표 컨테이너 숨김
+
+            //결제에서 예매이동 처리 추가
+            $('#bokdMSeat').hide();			//좌석도 숨김
+            $('#bokdMPayBooking').hide();
+            $('#frameBokdMSeat').attr("src", "/on/oh/ohz/PcntSeatChoi/selectPcntSeatChoi.do"); //좌석도 화면초기화
+            $('#framePayBooking').attr("src", "/on/oh/ohz/PayBooking/completeSeat.do"); //결제화면 초기화
+
+            //이전 메타태그 정보로 설정 (preMetaFormat:전역변수)
+            settingMeta(preMetaFormat);
+            //URL 변경
+            history.replaceState(null, null, preMetaFormat.metaTagUrl);
+        }
+
+        //좌석도에서 다음 버튼 클릭
+        function fn_goNextPagePcntSeatChoi(param) {
+            //로그인 여부 체크
+            fn_validLoginAt(param);
+            //데이터 보정 체크
+            //fn_validLoginAt();
+            //오입력 체크
+            //블랙리스트 체크
+            //결제로이동
+        }
+
+
+        //결제화면으로로 파라메타 전달 및 화면 이동
+        function fn_setBookingParamMove(options) {
+
+            NetfunnelChk.script("BOOK_STEP3", function () {
+
+                var framePayBookingBodyObj = $('#framePayBooking').get(0).contentWindow.document.body;	//결제화면 프레임 바디 오브젝트
+                var framePayBookingContentObj = $('#framePayBooking').get(0).contentWindow;
+
+                //좌석도에서 세팅한 param 값
+                var playSchdlNo = options.playSchdlNo;	//상영스케쥴
+                var seatOccupText = options.seatOccupText;	//좌석/티켓 상세정보
+                var totalAmt = options.totalAmt;		//총금액
+
+                $(framePayBookingBodyObj).find('#playSchdlNo').val(playSchdlNo);
+                $(framePayBookingBodyObj).find('#seatOccupText').val(seatOccupText);
+                $(framePayBookingBodyObj).find('#totalAmt').val(totalAmt);
+
+                framePayBookingContentObj.completeSeat();
+                $('#bokdMPayBooking').show();
+                //프레임 높이 자동 조정
+                calcFrameHeight($('#bokdMPayBooking'), $('#framePayBooking'));
+
+                $('#bokdMSeat').hide();  //좌석도 숨김
+
+            });
+        }
+
+        //결제화면에서 이전 버튼 클릭
+        function fn_goPrePagePayBooking() {
+            var framePayBookingContentObj = $('#framePayBooking').get(0).contentWindow;
+            var frameBokdMSeatContentObj = $('#frameBokdMSeat').get(0).contentWindow;
+            $('#bokdMPayBooking').hide();
+            $('#framePayBooking').attr("src", "/on/oh/ohz/PayBooking/completeSeat.do"); //결제화면 초기화
+            $('#bokdMSeat').show();	//좌석도 표시
+            $("html,body").scrollTop(0);
+
+            frameBokdMSeatContentObj.fn_display_init();
+        }
+
+        //결제화면에서 이전 버튼 클릭 및 블랙리스트 팝업
+        function fn_altBlackgoPrePagePayBooking(blackListParam) {
+            var framePayBookingContentObj = $('#framePayBooking').get(0).contentWindow;
+            var frameBokdMSeatContentObj = $('#frameBokdMSeat').get(0).contentWindow;
+            $('#bokdMPayBooking').hide();
+            $('#framePayBooking').attr("src", "/on/oh/ohz/PayBooking/completeSeat.do"); //결제화면 초기화
+            $('#bokdMSeat').show();	//좌석도 표시
+            $("html,body").scrollTop(0);
+
+            frameBokdMSeatContentObj.fn_display_init();
+
+            frameBokdMSeatContentObj.shwoBlackListPopup(blackListParam);
+        }
+
+        //결제화면에서 오류 발생시 좌석도로 이동(기선점 존재, 시간 초과 등)
+        function fn_goPrePageInitSeat(msg) {
+            var framePayBookingContentObj = $('#framePayBooking').get(0).contentWindow;
+            $('#bokdMPayBooking').hide();
+            $('#framePayBooking').attr("src", "/on/oh/ohz/PayBooking/completeSeat.do"); //결제화면 초기화
+
+            //좌석도 초기화
+            var frameBokdMSeatContentObj = $('#frameBokdMSeat').get(0).contentWindow;
+            frameBokdMSeatContentObj.fn_search('N');  //새로 조회 및 최초진입 팝업 띄우지 않음
+            $('#bokdMSeat').show();	//좌석도 표시
+            $("html,body").scrollTop(0);
+
+            if (msg != null && msg != "") {
+                gfn_alertMsgBox("결제가능 시간이 초과되어<br/> 좌석선택부터 다시 진행바랍니다.");
+            }
+
+            frameBokdMSeatContentObj.fn_display_init();
+        }
+
+        //프레임 height 자동조정 : 결제만 적용가능
+        function calcFrameHeight(divObj, frameObj) { //div obj, frame obj
+            var frameBodyObj = $(frameObj).get(0).contentWindow.document.body;	//프레임 바디 오브젝트
+            var height = $(frameObj).contents().find('.inner-wrap').outerHeight();
+            $(divObj).height(height + 130);
+            $(frameObj).height(height + 130);
+        }
+
+        //로그인여부 체크
+        function fn_validLoginAt(param) {
+            $.ajaxMegaBox({
+                url: "/on/oh/ohg/MbLogin/selectLoginSession.do",
+                //data   : JSON.stringify(paramData),
+                success: function (result) {
+                    var loginAt = result.resultMap.result;	//로그인 여부
+
+                    //비로그인 상태
+                    if (loginAt == "N") {
+                        //로그인 팝업 표시
+                        fn_viewLoginPopup('SimpleBokdM', 'pc', 'Y', JSON.stringify(param));
+                    }
+                    //로그인 상태
+                    else {
+                        //데이터 보정 체크
+                        fn_validDataRevisn(param);
+                    }
+                }
+            });
+        }
+
+        //데이터 보정 체크
+        function fn_validDataRevisn(param) {
+
+            fn_vlaidBlackList(param);
+
+            // 	$.ajaxMegaBox({
+            //         url    : "/on/oh/ohg/MbLogin/selectDataRevisn.do",
+            //         //data   : JSON.stringify(paramData),
+            //         success: function(result){
+            //         	var dataRevisnAt = result.resultMap.result;	//로그인 여부
+            //         	//자료보정대상
+            // 			if(dataRevisnAt  == "Y"){
+            // 				//자료 보정 안내 메세지 표시
+            // 				var arguments=result.resultMap.birthDe+' / '+result.resultMap.mblpTelno;
+            // 				var frameBokdMSeatContentObj = $('#frameBokdMSeat').get(0).contentWindow;	//좌석도 프레임 컨텐츠 오브젝트
+            // 				frameBokdMSeatContentObj.shwoDataRevisnPopup(arguments,param);
+            //  			}
+            //  			//자료보정대상아님
+            //  			else {
+            //  				//블랙리스트 체크
+            // 				fn_vlaidBlackList(param);
+            //  			}
+            //         }
+            //     });
+        }
+
+        //블랙리스트 체크
+        function fn_vlaidBlackList(param) {
+
+
+            var paramData = {
+                BokdCnt: param.bokdCnt
+                , BokdBrch: param.brchNo
+            };
+
+            // 	//좌석수 param
+            $.ajaxMegaBox({
+                url: "/on/oh/ohg/MbLogin/selectBlackList.do",
+                data: JSON.stringify(paramData),
+                success: function (result) {
+                    var dataBlackListAt = result.resultMap.result;
+                    //블랙리스트 대상
+                    if (dataBlackListAt == "Y") {
+                        //블랙리스트 안내 메세지 표시
+                        var frameBokdMSeatContentObj = $('#frameBokdMSeat').get(0).contentWindow;
+                        var blackListParam = {
+                            bokdAbleBrch: result.resultMap.bokdAbleBrch
+                            , bokdAbleCnt: result.resultMap.bokdAbleCnt
+                            , bokdAbleQty: result.resultMap.bokdAbleQty
+                        }
+                        frameBokdMSeatContentObj.shwoBlackListPopup(blackListParam);
+                    }
+                    //블랙리스트 비 대상
+                    else {
+                        //결제로 이동
+                        fn_setBookingParamMove(param);
+                    }
+                }
+            });
+        }
+
+        //페이지 이동
+        function fn_mvPage(page) {
+            $("#bokdMForm").attr("method", "post");
+            $("#bokdMForm").attr("action", page);
+            $("#bokdMForm").submit();
+        }
+
+        //언어변환
+        function setLangChg() {
+            if (localeCode == "en") {
+                location.href = "/booking?megaboxLanguage=kr";
+            }
+            else {
+                location.href = "/booking?megaboxLanguage=en";
+            }
+        }
+
+
+        //페이지 리로드
+        function fn_bokdReload(page) {
+            fn_goPrePagePcntSeatChoi();
+        }
+
+    </script>
+    <script src="js/megabox-brch.js"></script>
+    <script src="js/megabox-simpleBokd.js"></script>
+    <script type="text/javascript" src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script type="text/javascript">
+
+        var arrList = new Array();
+        var tmpData = { tabIndx: 0 };
+        var tabChangeAt = 'N';	//상영일 초기화 여부
+
+        $(function () {
+
+            $(document).ready(function () {
+                areaList();
+            });
+
+            // 항목 클릭
+            $('#contents').on('click', '.tab-left-area li', function () {
+                tmpData.tabIndx = $('#contents .tab-left-area li').index(this);
+                tabChangeAt = "Y";	//상영일 초기화 여부
+
+                if ($('#contents .tab-area').eq(tmpData.tabIndx).find('button.on').length == 0) {
+                    $('#contents .tab-area').eq(tmpData.tabIndx).find('button:first').click();
+                } else {
+                    $('#contents .tab-area').eq(tmpData.tabIndx).find('.tab-list-choice a.on').click();
+                }
+
+                fn_setMeta();
+            });
+
+            // 항목별 분류 클릭
+            $('#contents').on('click', '.tab-list-choice li', function () {
+                var idx = $('#contents .tab-list-choice li').index(this);
+
+                if ($('.tab-layer-cont').eq(idx).find('button.on').length != 0) {
+                    $('.tab-layer-cont').eq(idx).find('button.on').click();
+                }
+
+                if (idx == 0 && $('.tab-layer-cont').eq(idx).find('button.on').length == 0) {
+                    $('.tab-layer-cont').eq(idx).find('button:first').click();
+                }
+            });
+
+            // 영화명, 극장명 클릭
+            $('#contents').on('click', '.list-section button', function () {
+                var leftIdx = $('#contents .tab-left-area li.on').index();
+                if (leftIdx > 0 && leftIdx < 3) tabChangeAt = "Y";	//상영일 초기화 여부
+
+                var $this = $(this);
+                var paramData = {};
+                var option = { movieObj: $('#contents h3:last'), list: arrList, movieData: paramData, tabChangeAt: tabChangeAt };
+                // 			var option    = {movieObj  : $('#contents h3:last'), list : arrList, movieData : paramData};
+                var imgAttr = { 'src': $this.data('imgPath'), 'alt': $this.data('movieNm') };
+
+
+                // 상영 시간표명 변경
+                $('#contents .font-green').html($this.text());
+
+                // 영화별 - 영화 포스터 설정
+                if (tmpData.tabIndx == 0) {
+                    $('div.poster-section div.td').html($('<img class="poster" onerror="noImg(this, \'del\')"/>').attr(imgAttr));
+                }
+
+                // 값 설정
+                switch (tmpData.tabIndx) {
+                    case 0: //영화별
+                        paramData.masterType = 'movie';
+                        paramData.movieNo = $this.data('movieNo');
+                        break;
+
+                    case 1: //극장별
+                        paramData.masterType = 'brch';
+                        paramData.detailType = 'area';
+                        paramData.brchNo = $this.data('brchNo');
+                        break;
+
+                    case 2: //특별관
+                        paramData.masterType = 'brch';
+                        paramData.detailType = 'spcl';
+                        paramData.theabKindCd = $this.data('areaCd');
+                        paramData.brchNo = $this.data('brchNo');
+                        break;
+                }
+                MegaboxUtil.Brch.init(option);
+                tabChangeAt = "N";
+            });
+        });
+
+        // 영화관 조회
+        function areaList() {
+
+            gfn_logdingModal();
+
+            var paramData = { playDe: '20200803' };
+
+            $.ajaxMegaBox({
+                url: '/on/oh/ohb/PlayTime/selectPlayTimeMasterList.do',
+                data: JSON.stringify(paramData),
+
+                success: function (data, textStatus, jqXHR) {
+                    fn_movieListUpt(data.movieList, 'all');
+                    fn_movieListUpt(data.crtnMovieList, 'crtn');
+                    fn_brchListUpt(data.areaBrchList, 'area');
+                    fn_brchListUpt(data.spclbBrchList, 'spcl');
+
+                    $('#contents .tab-left-area li:first').click();
+
+                    gfn_logdingModal();
+                }
+            });
+        }
+
+        // 영화목록 갱신
+        function fn_movieListUpt(list, type) {
+
+            var arr = [];
+            var $button, $li;
+
+            $.each(list, function (i, param) {
+
+                // 클릭변경
+                param.disabled = (param.formAt != 'Y') ? 'disabled' : '';
+
+                // 객체
+                $button = $('<button type="button" class="btn ' + param.disabled + '">');
+                arr.push($('<li>').html($button));
+
+                // 영화이미지
+                param.movieImgPath = 'https://img.megabox.co.kr' + nvl(param.movieImgPath).posterFormat('_316');
+
+                // 버튼정보
+                $button.attr({
+                    'data-movie-nm': param.movieNm
+                    , 'data-movie-no': param.movieNo
+                    , 'data-img-path': param.movieImgPath
+                }).html(param.movieNm);
+            });
+
+            switch (type) {
+                case 'all': $('#masterMovie_AllMovie  .list').html(arr); break;
+                default: $('#masterMovie_CrtnMovie .list').html(arr);
+            }
+        }
+
+        // 극장정보 갱신
+        function fn_brchListUpt(list, type) {
+
+            var $div, $li, areaCd;
+
+            var areaList = [];
+            var brchList = [];
+
+            var html = '<div class="theater-section">';
+            html += '	<div class="table">';
+            html += '		<div class="td">';
+            html += '			<a href="#1" title="#2 특별관 페이지로 이동">';
+            html += '				<p><strong>#2</strong>#3</p>';
+            html += '				<i class="iconset ico-arrow-half"></i>';
+            html += '				<img src="#4" alt="#2 특별관 페이지로 이동" class="poster">';
+            html += '			</a>';
+            html += '		</div>';
+            html += '	</div>';
+            html += '</div>';
+
+            $.each(list, function (i, param) {
+
+                if (areaCd != param.areaCd) {
+
+                    areaCd = param.areaCd;
+
+                    var titleTxt = "";
+                    if (type == 'spcl') {
+                        titleTxt = "특별관 선택";
+                    }
+                    else {
+                        titleTxt = "지점 선택";
+                    }
+
+                    // 객채 설정
+                    $li = $('<li><a href="#tab' + areaCd + '" title="' + param.areaCdNm + titleTxt + '" data-area-cd="' + areaCd + '">' + param.areaCdNm + '</a></li>');
+                    $div = $('<div id="tab' + areaCd + '" class="tab-layer-cont"><div class="scroll m-scroll"><ul class="list"></ul><div></div>');
+
+                    // 첫번째 객체
+                    if (i == 0) {
+                        $div.addClass('on');
+                        $li.find('a').addClass('on');
+                    }
+
+                    // 특별관여부
+                    if (type == 'spcl') {
+
+                        switch (areaCd) {
+
+                            case 'MX':
+                                param.curAreaCdNm = "MX";
+                                param.welComeHtml = "진정한 영화 사운드를 통한<br />최고의 영화! <br />메가박스의 차세대 <br />표준 상영관";
+                                param.splcBrchLink = "/specialtheater/mx";
+                                param.imgUrl = 'https://img.megabox.co.kr/static/pc/images/reserve/img-theater-mx.png';
+                                break;
+                            case 'CFT':
+                                param.curAreaCdNm = "COMFORT";
+                                param.welComeHtml = "더욱 편안한 영화 관람을<br />위한 다양한 여유공간";
+                                param.splcBrchLink = "/specialtheater/comfort";
+                                param.imgUrl = 'https://img.megabox.co.kr/static/pc/images/reserve/img-theater-comfort.png';
+                                break;
+                            case 'TBQ':
+                                param.curAreaCdNm = "THE BOUTIQUE";
+                                param.welComeHtml = "영화를 본다는 것,<br />그 놀라운 경험을 위하여";
+                                param.splcBrchLink = "/specialtheater/boutique";
+                                param.imgUrl = 'https://img.megabox.co.kr/static/pc/images/reserve/img-theater-boutique.png';
+                                break;
+                            case 'MKB':
+                                param.curAreaCdNm = "MEGA KIDS";
+                                param.welComeHtml = "아이와 가족이 함께 머물며<br />삶의 소중한 가치를 배우는<br />더 행복한 놀이공간";
+                                param.splcBrchLink = "/specialtheater/megakids";
+                                param.imgUrl = 'https://img.megabox.co.kr/static/pc/images/reserve/img-theater-kids.png';
+                                break;
+                            case 'BCY':
+                                param.curAreaCdNm = "BALCONY";
+                                param.welComeHtml = "CINEMA IN CINEMA,<br />영화관 속<br />나만의 개인 영화관";
+                                param.imgFileNm = "balcony";
+                                param.splcBrchLink = "/specialtheater/balcony";
+                                param.imgUrl = 'https://img.megabox.co.kr/static/pc/images/reserve/img-theater-balcony.png';
+                                break;
+                            case 'TFC':
+                                param.curAreaCdNm = "THE FIRST CLUB";
+                                param.welComeHtml = "특별한 날,<br />특별한 당신을 위한<br />단 하나의<br />THE FIRST CLUB";
+                                param.splcBrchLink = "/specialtheater/firstclub";
+                                param.imgUrl = 'https://img.megabox.co.kr/static/pc/images/reserve/img-theater-firstclub.png';
+                                break;
+                            case 'DBC':
+                                param.curAreaCdNm = "DOLBY";
+                                param.welComeHtml = "국내 최초로 메가박스가 <br />선보이는 세계 최고 <br />기술력의 몰입 시네마";
+                                param.splcBrchLink = "/specialtheater/dolby";
+                                param.imgUrl = 'https://img.megabox.co.kr/static/pc/images/reserve/img-theater-dolby.png';
+                                break;
+                        }
+
+                        // 특별관 이미지등록
+                        $div.append(html.replace('#1', param.splcBrchLink).replaceAll('#2', param.curAreaCdNm).replace('#3', param.welComeHtml).replace('#4', param.imgUrl));
+
+                    } else {
+                        arrList.push({ areaCd: areaCd, areaNm: param.areaCdNm });
+                    }
+
+                    areaList.push($li);
+                    brchList.push($div);
+                }
+
+                // 극장추가
+                $div.find('ul').append('<li><button type="button" class="btn" data-area-cd="' + areaCd + '" data-brch-no="' + param.brchNo + '">' + param.brchNm + '</button></li>');
+
+                // 극장상태 추가
+                if (param.brchOnlineExpoAt == 'Y') {
+                    switch (param.brchOnlineExpoStatCd) {
+                        case 'OES01': $div.find('button:last').append('&nbsp;<i class="iconset ico-theater-new"></i>'); break;
+                        case 'OES02': $div.find('button:last').append('&nbsp;<i class="iconset ico-theater-renewal"></i>'); break;
+                        case 'OES03': $div.find('button:last').append('&nbsp;<i class="iconset ico-theater-open"></i>'); break;
+                        case 'OES04': $div.find('button:last').append('&nbsp;<i class="iconset ico-theater-open"></i>'); break;
+                    }
+                }
+            });
+
+            // 극장 갯수 설정
+            $.each(areaList, function (i, data) {
+                data.find('a').append('(' + brchList[i].find('li').length + ')');
+            });
+
+            switch (type) {
+                case 'area':
+                    $('#masterBrch .list-section').html(brchList);
+                    $('#masterBrch .tab-list-choice ul').html(areaList);
+                    break;
+                default:
+                    $('#masterSpclBrch .list-section').html(brchList);
+                    $('#masterSpclBrch .tab-list-choice ul').html(areaList);
+                    $('div.m-scroll').mCustomScrollbar();	//스크롤 기능 추가
+            }
+        }
+
+    </script>
+    <script src="js/megabox.common.min.js"></script>
+    <script src="js/front.js"></script>
+    <style>
+        .startsc{
+            display: none;
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="body-wrap">
+        <div id="schdlContainer" class="container">
+            <div id="contents">
+                <div class="inner-wrap">
+                    <div class="time-table-page">
+                        <div class="movie-choice-area">
+                            <div class="tab-left-area">
+                                <ul>
+                                    <li class="on"><a href="#masterMovie" title="영화별 선택" class="btn"><i
+                                                class="iconset ico-tab-movie"></i> 영화별</a></li>
+                                    <li><a href="#masterBrch" title="극장별 선택" class="btn"><i
+                                                class="iconset ico-tab-theater"></i> 극장별</a></li>
+                                    <li><a href="#masterSpclBrch" title="특별관 선택" class="btn"><i
+                                                class="iconset ico-tab-special"></i> 특별관</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="ltab-layer-wrap">
+                                <div id="masterMovie" class="ltab-layer-cont has-img on"><a href="" class="ir"></a>
+                                    <div class="wrap tab-area">
+                                        <div class="tab-list-choice">
+                                            <ul>
+                                                <li><a href="#masterMovie_AllMovie" title="전체영화 선택"
+                                                        class="btn on">전체영화</a></li>
+                                                <li><a href="#masterMovie_CrtnMovie" title="큐레이션 선택"
+                                                        class="btn">큐레이션</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="list-section">
+                                            <div id="masterMovie_AllMovie" class="tab-layer-cont on"><a href=""
+                                                    class="ir"></a>
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_2">
+                                                    <div id="mCSB_2"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: none;" tabindex="0">
+                                                        <div id="mCSB_2_container" class="mCSB_container"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn disabled on"
+                                                                        data-movie-nm="다만 악에서 구하소서"
+                                                                        data-movie-no="20021400"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/07/esjM0Pd6zog3JPl316LvHxJiB1x05o2i_316.jpg">다만
+                                                                        악에서 구하소서</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="강철비2: 정상회담"
+                                                                        data-movie-no="20034200"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/07/43qr4NQPatsHI2msM26xlRThBwRRhnA7_316.jpg">강철비2:
+                                                                        정상회담</button></li>
+                                                                <li><button type="button" class="btn" data-movie-nm="반도"
+                                                                        data-movie-no="20021300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/14/O8cCC0j4fb8DD7SfbQgwNW7rBSJ6JuYQ_316.gif">반도</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[시네도슨트] 뉴욕 현대 미술관&amp;amp;구겐하임 미술관"
+                                                                        data-movie-no="20033900"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/06/xtKp5JyjrE7W1VJXtt9DRDFg4pQoOWv8_316.jpg">[시네도슨트]
+                                                                        뉴욕 현대 미술관&amp;구겐하임 미술관</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[LIVE] 2020 잘츠부르크 – 빈 필 &amp;amp; 두다멜 콘서트"
+                                                                        data-movie-no="20038300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/17/eZ04C0P4EPruZwo2IWVHQ8JGJRYEkju4_316.jpg">[LIVE]
+                                                                        2020 잘츠부르크 – 빈 필 &amp; 두다멜 콘서트</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="애니멀 크래커" data-movie-no="20033300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/14/aymqJ4w5UFyMI5xDP115RHGv50qRgoIz_316.jpg">애니멀
+                                                                        크래커</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="포드 V 페라리"
+                                                                        data-movie-no="01645600"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2019/16/C68900-4853-4CF8-B300-7E783C74D9D0.medium.jpg">포드
+                                                                        V 페라리</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="빅샤크3: 젤리몬스터 대소동"
+                                                                        data-movie-no="20023100"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/28/ug2yVBFs9BmfJT2PEbqQtQlZkiAzjvKJ_316.jpg">빅샤크3:
+                                                                        젤리몬스터 대소동</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="알라딘" data-movie-no="01542500"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/17/AXJfBFiHZMVR1o9Qjezt2L33RQHL8vUP_316.gif">알라딘</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="온워드: 단 하루의 기적"
+                                                                        data-movie-no="01693600"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/08/mdUVsCdumzsBGdlL3ntTG4cWZjSchkrC_316.jpg">온워드:
+                                                                        단 하루의 기적</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[LIVE] 2020 잘츠부르크 – 빈 필 &amp;amp; 틸레만 콘서트"
+                                                                        data-movie-no="20038400"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/17/cloozIXynUDlLOL78rTBWrHfsGRZSrbh_316.jpg">[LIVE]
+                                                                        2020 잘츠부르크 – 빈 필 &amp; 틸레만 콘서트</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="남매의 여름밤" data-movie-no="20039400"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/24/e7kzepKoS0mDhlVUYdBa2fcjcVBb1TOX_316.jpg">남매의
+                                                                        여름밤</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="2020 잘츠부르크 페스티벌 - 코지 판 투테"
+                                                                        data-movie-no="20038200"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/17/i3O7AXbbvo9vBTc9kMfRttIBW4eg2tPc_316.jpg">2020
+                                                                        잘츠부르크 페스티벌 - 코지 판 투테</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="2020 잘츠부르크 페스티벌 - 엘렉트라"
+                                                                        data-movie-no="20038100"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/17/q17d0R5n1MgFHGuzSFykf3Dqq7WKuHcz_316.jpg">2020
+                                                                        잘츠부르크 페스티벌 - 엘렉트라</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="지저귀는 새는 날지 않는다"
+                                                                        data-movie-no="20026400"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/30/lByXZyS1Lehx05q8WO0hEckWoXvVoRIc_316.jpg">지저귀는
+                                                                        새는 날지 않는다</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="밤쉘: 세상을 바꾼 폭탄선언"
+                                                                        data-movie-no="20007000"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/17/x9iw1Z0lm1WXWs3O3nLGDZquZML2GoFU_316.jpg">밤쉘:
+                                                                        세상을 바꾼 폭탄선언</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="오케이 마담" data-movie-no="20027800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/20/POxoTvyl2T3XqkywmyEA7QhqWNjSH7So_316.jpg">오케이
+                                                                        마담</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="미녀와 야수" data-movie-no="01165300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2017/37/5A3B70-DE98-4C49-BC72-EF044835FE03.medium.jpg">미녀와
+                                                                        야수</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="카오산 탱고" data-movie-no="20028800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/20/acRLkis8vhHASwN7ZoaHkLxmUe5roKMm_316.jpg">카오산
+                                                                        탱고</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="아쿠아맨" data-movie-no="01454200"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2018/2A/99B12A-5CE5-41CA-B13A-BE893ADC0E16.medium.jpg">아쿠아맨</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[앙코르] 라 트라비아타 @The Met"
+                                                                        data-movie-no="20031500"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/01/IONCg9EsfuaHEBusVeFgYXUm6nSh5CsL_316.jpg">[앙코르]
+                                                                        라 트라비아타 @The Met</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="마티아스와 막심"
+                                                                        data-movie-no="20029400"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/10/QbtXybaSBo52N6LRCxryW4s1z87lGTdz_316.jpg">마티아스와
+                                                                        막심</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="주식회사 스페셜액터스"
+                                                                        data-movie-no="20037100"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/24/7qKQXEikTnpCCyxIbao888uFefTecsGM_316.jpg">주식회사
+                                                                        스페셜액터스</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[특별 상영] 베토벤 프로젝트"
+                                                                        data-movie-no="20025900"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/23/lepsjCKRQ84828xXV8miut1CmdnNG1X4_316.jpg">[특별
+                                                                        상영] 베토벤 프로젝트</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[유니텔 앙코르] 마술피리"
+                                                                        data-movie-no="20039000"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/22/s6lLJNZiEQ51sXIuKKqq8ZgdCew49IpV_316.jpg">[유니텔
+                                                                        앙코르] 마술피리</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[팝콘클래식] 세계여행으로 젊은 목수가 되기까지"
+                                                                        data-movie-no="20033700"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/06/otCIseLU7ETgsfMCMfaYvfTIPSXFM7Q9_316.jpg">[팝콘클래식]
+                                                                        세계여행으로 젊은 목수가 되기까지</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="킹 오브 프리즘 올 스타즈 -프리즘 쇼☆베스트10-"
+                                                                        data-movie-no="20004100"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/04/13/6R6F5khxY400ZPHaixQDjZL7zabPSrLF_316.jpg">킹
+                                                                        오브 프리즘 올 스타즈 -프리즘 쇼☆베스트10-</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="위대한 쇼맨" data-movie-no="01309400"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2017/D0/D558A7-DE6C-4178-B3F6-27A023AA5DEE.medium.jpg">위대한
+                                                                        쇼맨</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[오페라] 보체크 @The Met"
+                                                                        data-movie-no="20040800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/29/zP0juHwkDup7Mqbu838ODhtIwIgeGF8o_316.jpg">[오페라]
+                                                                        보체크 @The Met</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="소년 아메드" data-movie-no="20037000"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/17/3455FQU9wS9N53IT2lRFKqPQNLzysSJf_316.jpg">소년
+                                                                        아메드</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="존 윅: 특별판"
+                                                                        data-movie-no="20036800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/20/FEA3EOkbMPXY3AeZDNeQl6fWn0FU5Xwe_316.jpg">존
+                                                                        윅: 특별판</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[GET9] 매디슨 카운티의 다리"
+                                                                        data-movie-no="20041300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/31/lzNKHhSxRfIR0LtgDLolWGeMWq9zDEBf_316.jpg">[GET9]
+                                                                        매디슨 카운티의 다리</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="1942: 언노운 배틀"
+                                                                        data-movie-no="20025800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/20/gA0bEj2FG6uBbZpA4sQ9FNc2Gu6uYFkg_316.jpg">1942:
+                                                                        언노운 배틀</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="블랙아웃 : 인베이젼 어스"
+                                                                        data-movie-no="20027000"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/10/LcEfsz9pIm4iSTl6XfBh8l8Dv3v9RK7Z_316.jpg">블랙아웃
+                                                                        : 인베이젼 어스</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="세인트 주디" data-movie-no="20034100"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/14/vgULkdEGxcwy7KRUloWnJulwUCXh50Qz_316.jpg">세인트
+                                                                        주디</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[GET9/GV] 69세"
+                                                                        data-movie-no="20041500"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/31/HPmtAGHXndQNB2YeCiAHeqlkBqjXMqId_316.jpg">[GET9/GV]
+                                                                        69세</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="카페 벨에포크" data-movie-no="20013300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/05/13/Ke4lvcHauIeImAMNTOAn1IfCcIbLUAaT_316.jpg">카페
+                                                                        벨에포크</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="&amp;#35;살아있다"
+                                                                        data-movie-no="20019200"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/02/xIBdAOS5lJNBe1CBXovcV1WYE9Q6DWPV_316.jpg">#살아있다</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="클리어 코로나 19 - 오엠지"
+                                                                        data-movie-no="20032100"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/03/ftUB2rpFoDRqVp6MAPOs1W9hCVCaM2xy_316.jpg">클리어
+                                                                        코로나 19 - 오엠지</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="모든 것을 벗어던진 특별한 여행"
+                                                                        data-movie-no="20029800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/03/uFq3UHxTl5jsmJqX613zFLzHkNRvUysc_316.jpg">모든
+                                                                        것을 벗어던진 특별한 여행</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[GET9] 45년 후"
+                                                                        data-movie-no="20041200"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/31/GjIKfZygKGn7lTt0n4d1JKh8JM9NiUPo_316.jpg">[GET9]
+                                                                        45년 후</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="분노의 질주: 홉스&amp;amp;쇼"
+                                                                        data-movie-no="01598500"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2019/7B/6B71E5-0406-49E0-8615-3A96708AD926.medium.jpg">분노의
+                                                                        질주: 홉스&amp;쇼</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="슈퍼 레이스" data-movie-no="20016800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/17/B9QegoY1kO7F7sogrOAWhPV2WamOicZa_316.jpg">슈퍼
+                                                                        레이스</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="소년시절의 너" data-movie-no="20027300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/19/4N4IdgIE4bXyn0O0mWDHT5eOFFzgMutA_316.jpg">소년시절의
+                                                                        너</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="블루 아워" data-movie-no="20026300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/07/MKIdmHUeWpkyskUWsgpGcGvibjhJ153g_316.jpg">블루
+                                                                        아워</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="분노의 질주: 더 익스트림"
+                                                                        data-movie-no="01181900"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2017/1C/DE9F11-0DBD-4F32-87C5-7B1AD5935D17.medium.jpg">분노의
+                                                                        질주: 더 익스트림</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="비바리움" data-movie-no="20026200"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/07/T1dn9dKgscXufclId34R5oyDzPezDCBO_316.jpg">비바리움</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="몽상가들" data-movie-no="00114100"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2014/33/EF8AAF-DA8D-44D7-8582-A058476A6CE6.medium.jpg">몽상가들</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="너와 파도를 탈 수 있다면"
+                                                                        data-movie-no="20027400"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/19/QQrqOIR3mKlmY82NQJ5a5U6gzdPjPb81_316.jpg">너와
+                                                                        파도를 탈 수 있다면</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="트랜짓" data-movie-no="20022500"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/23/UXvGh8i7KuMOZzLntFo88hmdcF7vPDvt_316.jpg">트랜짓</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[GET9] 다가오는 것들"
+                                                                        data-movie-no="20041400"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/31/WbYL9PYC3tA8Jug7rFOvO1BTh37vG6i7_316.jpg">[GET9]
+                                                                        다가오는 것들</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="쓰루 더 파이어"
+                                                                        data-movie-no="20038000"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/16/2bviwh7gCdzBTFAWIinj36onoGbc8GBf_316.jpg">쓰루
+                                                                        더 파이어</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="클리어 코로나 19 - 로드무비"
+                                                                        data-movie-no="20031900"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/03/LnJr30onxmdW1upYObuom9N1xcj7YeKW_316.jpg">클리어
+                                                                        코로나 19 - 로드무비</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="원스" data-movie-no="00059900"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2014/B7/7DC783-8E05-4F80-8E8C-72BE30254778.medium.jpg">원스</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[팝콘클래식] 오페라와 다양한 장르의 음악들"
+                                                                        data-movie-no="20021200"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/18/kJjm7u0GfYUdj70MPQmnsVq5bek0idhG_316.jpg">[팝콘클래식]
+                                                                        오페라와 다양한 장르의 음악들</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="어게인" data-movie-no="20033500"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/16/Lh52gUwk30pE1WEDhv3EZ2xULIKAXgU2_316.jpg">어게인</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="트로이 디렉터스 컷"
+                                                                        data-movie-no="20026800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/07/ZN1uRdOriLeBQoqtIOYky3b2T4HIKWO4_316.jpg">트로이
+                                                                        디렉터스 컷</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="클리어 코로나 19 - 네버비포"
+                                                                        data-movie-no="20032000"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/03/U4svBgVUhqrIQW5YNFQVSy3V0jys1BVO_316.jpg">클리어
+                                                                        코로나 19 - 네버비포</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="래미와 친구들: 푸른푸른 초원의 위기"
+                                                                        data-movie-no="20038600"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/24/XcXuvMP8nYYgjfieVtExWi6lCw064GBU_316.jpg">래미와
+                                                                        친구들: 푸른푸른 초원의 위기</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="에이브의 쿠킹 다이어리"
+                                                                        data-movie-no="20020300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/04/Ab1cMdGWzX4DnWPHykTWcYLAhl9y2zP8_316.jpg">에이브의
+                                                                        쿠킹 다이어리</button></li>
+                                                                <li><button type="button" class="btn" data-movie-nm="결백"
+                                                                        data-movie-no="20003500"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/15/pjraLryYt5zQ1HEf6axtAdkXRhfhRZTZ_316.jpg">결백</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn" data-movie-nm="루비"
+                                                                        data-movie-no="20038500"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/20/2XwBoi5Qx5cI73AjUmr4Ew7m1nZiYLFL_316.jpg">루비</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="팡파레" data-movie-no="20026000"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/19/dF25Sx2Ow4LbsSBJOhLJXcO8zT2FV1Tk_316.jpg">팡파레</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="다크 나이트" data-movie-no="00094300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/17/4UNWGNdt9939BUiWfXsJk9jWNGdVejsH_316.jpg">다크
+                                                                        나이트</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="클리어 코로나 19 - 19앤오버"
+                                                                        data-movie-no="20032400"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/03/Dg1ITYoQZA6H4mnXD9OsWwOLhzSPOi0D_316.jpg">클리어
+                                                                        코로나 19 - 19앤오버</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="클리어 코로나 19 - 아웃겨"
+                                                                        data-movie-no="20032200"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/03/MvWt05xJmvuXokfRjdyX7k9kbb6DPt5J_316.jpg">클리어
+                                                                        코로나 19 - 아웃겨</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="전망좋은 방" data-movie-no="20020000"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/05/21/2PdCEHVNa13k4zwyEWrhyHY1iooB9kOl_316.jpg">전망좋은
+                                                                        방</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="스타 이즈 본" data-movie-no="01438700"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2018/C6/013959-C07F-401A-AAC0-CA9A76DB48AE.medium.jpg">스타
+                                                                        이즈 본</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="팬데믹" data-movie-no="20029700"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/10/0IA73cnVznnOD7Ye8RTJ5wBg1UG5R7t4_316.jpg">팬데믹</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="클리어 코로나 19 - 캠퍼스"
+                                                                        data-movie-no="20031800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/03/Pgt838WuBu1Ncu7yy06ANJStlrRMhWd8_316.jpg">클리어
+                                                                        코로나 19 - 캠퍼스</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="클리어 코로나19 - 어페어"
+                                                                        data-movie-no="20032300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/03/dG7ukWhEqTEBBLtTbwveqjh7gS8fDYoD_316.jpg">클리어
+                                                                        코로나19 - 어페어</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="패왕별희 디 오리지널"
+                                                                        data-movie-no="20004800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/04/16/3OHRKnHHelry9f7WY1vM9qghwK48Sr0I_316.jpg">패왕별희
+                                                                        디 오리지널</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="다가오는 것들" data-movie-no="01092700"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2016/BB/613A6D-2389-4946-BD85-29155BDEE2FF.medium.jpg">다가오는
+                                                                        것들</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="야구소녀" data-movie-no="20019300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/05/26/4DpEOKISeL20EXabwXkfsfaeeJW27heu_316.jpg">야구소녀</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="라라랜드" data-movie-no="20007800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/03/11/Qgl73W9FxEMYJnnaOYPFtyqSrqB3vmJ2_316.jpg">라라랜드</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="찬실이는 복도 많지"
+                                                                        data-movie-no="01695700"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/02/28/Mz9o5hkBM8JVixfUCyZY4NDnkIFTY4pk_316.jpg">찬실이는
+                                                                        복도 많지</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="타오르는 여인의 초상"
+                                                                        data-movie-no="01671700"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2020/6F/7D3A85-E138-4D71-859F-2FF5A853BC32.medium.jpg">타오르는
+                                                                        여인의 초상</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="울지마 톤즈 2 : 슈크란 바바"
+                                                                        data-movie-no="01671800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2019/17/DF454F-38CC-4F7B-85EB-DD84D2E22A02.medium.jpg">울지마
+                                                                        톤즈 2 : 슈크란 바바</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="가버나움" data-movie-no="01502700"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2019/E1/3AEA44-BAD3-4D2E-BB68-8490F6523BA7.medium.jpg">가버나움</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="고 피쉬!" data-movie-no="20021600"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/03/75zXgkc6QEJYKfDFonSm1UJvxqtf2YzW_316.jpg">고
+                                                                        피쉬!</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="래미의 드래곤월드 구출작전"
+                                                                        data-movie-no="20032900"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/03/FNOPCndWUXlJrsIuTK5vN4dkkhEqudck_316.jpg">래미의
+                                                                        드래곤월드 구출작전</button></li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="바람의 언덕" data-movie-no="20011300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/04/06/lW8x6XukACH3WVFFCHFIR6ky6xurotnS_316.jpg">바람의
+                                                                        언덕</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="밤의 문이 열린다"
+                                                                        data-movie-no="01598200"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2019/2F/203EE0-1513-4A93-835F-EFB5785155EC.medium.jpg">밤의
+                                                                        문이 열린다</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="벌새" data-movie-no="01594700"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2019/FC/17F1E0-4117-4912-B4D8-15139A4B3D4D.medium.jpg">벌새</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="보희와 녹양" data-movie-no="01568700"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2019/02/2B617F-FEDB-4722-B3D2-C8238C1339D0.medium.jpg">보희와
+                                                                        녹양</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="비행" data-movie-no="20005600"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/02/25/VLrXJa5MCtWXQyBlLS3PPLaL8BLUxSj3_316.jpg">비행</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="소공녀" data-movie-no="01349600"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2018/F3/5675DD-A0F8-4028-96E6-649485A4B057.medium.jpg">소공녀</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="소리꾼" data-movie-no="20020900"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/14/xyFZ43L34gED4vuniwYptrXMLJeAyBwy_316.jpg">소리꾼</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="시라이" data-movie-no="20028500"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/03/j8lJxelyOppi5r9HYm8PcUEhJvygURBn_316.jpg">시라이</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="우리들" data-movie-no="01066700"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2016/3C/3E4451-3314-4407-86B1-46A29FF2048C.medium.jpg">우리들</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="울프 콜" data-movie-no="20002800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/02/17/V0gLHxTI2FC1xKh4JXKacz7LlKvWMU9e_316.jpg">울프
+                                                                        콜</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="퇴근길씨네마 단편 옴니버스 &amp;lt;밀크 / 핑크페미 / 주근깨 / 기대주&amp;gt;"
+                                                                        data-movie-no="20031600"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/02/O99haUHWjQmVtHJ2hMXeycZTjnyygaJM_316.jpg">퇴근길씨네마
+                                                                        단편 옴니버스 &lt;밀크 / 핑크페미 / 주근깨 / 기대주&gt;</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="프리즈너" data-movie-no="20031400"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/10/DTxZV4xc8XaQbz3MVPYbGga1vKxFp8wb_316.jpg">프리즈너</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn"
+                                                                        data-movie-nm="호우시절" data-movie-no="00164700"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/asis/system/mop/poster/2009/A2/35DF9D-8B76-4FA0-9F93-B29C169FAA93.medium.jpg">호우시절</button>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div id="mCSB_2_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_2_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: block;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_2_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; display: block; height: 46px; max-height: 190px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="masterMovie_CrtnMovie" class="tab-layer-cont"><a href=""
+                                                    class="ir"></a>
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_3 mCS_no_scrollbar">
+                                                    <div id="mCSB_3"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: 200px;" tabindex="0">
+                                                        <div id="mCSB_3_container"
+                                                            class="mCSB_container mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[시네도슨트] 뉴욕 현대 미술관&amp;amp;구겐하임 미술관"
+                                                                        data-movie-no="20033900"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/06/xtKp5JyjrE7W1VJXtt9DRDFg4pQoOWv8_316.jpg">[시네도슨트]
+                                                                        뉴욕 현대 미술관&amp;구겐하임 미술관</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[LIVE] 2020 잘츠부르크 – 빈 필 &amp;amp; 두다멜 콘서트"
+                                                                        data-movie-no="20038300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/17/eZ04C0P4EPruZwo2IWVHQ8JGJRYEkju4_316.jpg">[LIVE]
+                                                                        2020 잘츠부르크 – 빈 필 &amp; 두다멜 콘서트</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[LIVE] 2020 잘츠부르크 – 빈 필 &amp;amp; 틸레만 콘서트"
+                                                                        data-movie-no="20038400"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/17/cloozIXynUDlLOL78rTBWrHfsGRZSrbh_316.jpg">[LIVE]
+                                                                        2020 잘츠부르크 – 빈 필 &amp; 틸레만 콘서트</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="남매의 여름밤" data-movie-no="20039400"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/24/e7kzepKoS0mDhlVUYdBa2fcjcVBb1TOX_316.jpg">남매의
+                                                                        여름밤</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="2020 잘츠부르크 페스티벌 - 코지 판 투테"
+                                                                        data-movie-no="20038200"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/17/i3O7AXbbvo9vBTc9kMfRttIBW4eg2tPc_316.jpg">2020
+                                                                        잘츠부르크 페스티벌 - 코지 판 투테</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="2020 잘츠부르크 페스티벌 - 엘렉트라"
+                                                                        data-movie-no="20038100"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/17/q17d0R5n1MgFHGuzSFykf3Dqq7WKuHcz_316.jpg">2020
+                                                                        잘츠부르크 페스티벌 - 엘렉트라</button></li>
+                                                                <li><button type="button" class="btn "
+                                                                        data-movie-nm="카오산 탱고" data-movie-no="20028800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/20/acRLkis8vhHASwN7ZoaHkLxmUe5roKMm_316.jpg">카오산
+                                                                        탱고</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[앙코르] 라 트라비아타 @The Met"
+                                                                        data-movie-no="20031500"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/01/IONCg9EsfuaHEBusVeFgYXUm6nSh5CsL_316.jpg">[앙코르]
+                                                                        라 트라비아타 @The Met</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="주식회사 스페셜액터스"
+                                                                        data-movie-no="20037100"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/24/7qKQXEikTnpCCyxIbao888uFefTecsGM_316.jpg">주식회사
+                                                                        스페셜액터스</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[특별 상영] 베토벤 프로젝트"
+                                                                        data-movie-no="20025900"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/23/lepsjCKRQ84828xXV8miut1CmdnNG1X4_316.jpg">[특별
+                                                                        상영] 베토벤 프로젝트</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[유니텔 앙코르] 마술피리"
+                                                                        data-movie-no="20039000"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/22/s6lLJNZiEQ51sXIuKKqq8ZgdCew49IpV_316.jpg">[유니텔
+                                                                        앙코르] 마술피리</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[팝콘클래식] 세계여행으로 젊은 목수가 되기까지"
+                                                                        data-movie-no="20033700"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/06/otCIseLU7ETgsfMCMfaYvfTIPSXFM7Q9_316.jpg">[팝콘클래식]
+                                                                        세계여행으로 젊은 목수가 되기까지</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[오페라] 보체크 @The Met"
+                                                                        data-movie-no="20040800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/29/zP0juHwkDup7Mqbu838ODhtIwIgeGF8o_316.jpg">[오페라]
+                                                                        보체크 @The Met</button></li>
+                                                                <li><button type="button" class="btn "
+                                                                        data-movie-nm="소년 아메드" data-movie-no="20037000"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/17/3455FQU9wS9N53IT2lRFKqPQNLzysSJf_316.jpg">소년
+                                                                        아메드</button></li>
+                                                                <li><button type="button" class="btn "
+                                                                        data-movie-nm="카페 벨에포크" data-movie-no="20013300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/05/13/Ke4lvcHauIeImAMNTOAn1IfCcIbLUAaT_316.jpg">카페
+                                                                        벨에포크</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="블루 아워" data-movie-no="20026300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/07/MKIdmHUeWpkyskUWsgpGcGvibjhJ153g_316.jpg">블루
+                                                                        아워</button></li>
+                                                                <li><button type="button" class="btn "
+                                                                        data-movie-nm="비바리움" data-movie-no="20026200"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/07/T1dn9dKgscXufclId34R5oyDzPezDCBO_316.jpg">비바리움</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn "
+                                                                        data-movie-nm="쓰루 더 파이어"
+                                                                        data-movie-no="20038000"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/16/2bviwh7gCdzBTFAWIinj36onoGbc8GBf_316.jpg">쓰루
+                                                                        더 파이어</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="[팝콘클래식] 오페라와 다양한 장르의 음악들"
+                                                                        data-movie-no="20021200"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/18/kJjm7u0GfYUdj70MPQmnsVq5bek0idhG_316.jpg">[팝콘클래식]
+                                                                        오페라와 다양한 장르의 음악들</button></li>
+                                                                <li><button type="button" class="btn "
+                                                                        data-movie-nm="어게인" data-movie-no="20033500"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/16/Lh52gUwk30pE1WEDhv3EZ2xULIKAXgU2_316.jpg">어게인</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn "
+                                                                        data-movie-nm="에이브의 쿠킹 다이어리"
+                                                                        data-movie-no="20020300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/06/04/Ab1cMdGWzX4DnWPHykTWcYLAhl9y2zP8_316.jpg">에이브의
+                                                                        쿠킹 다이어리</button></li>
+                                                                <li><button type="button" class="btn "
+                                                                        data-movie-nm="루비" data-movie-no="20038500"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/07/20/2XwBoi5Qx5cI73AjUmr4Ew7m1nZiYLFL_316.jpg">루비</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="전망좋은 방" data-movie-no="20020000"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/05/21/2PdCEHVNa13k4zwyEWrhyHY1iooB9kOl_316.jpg">전망좋은
+                                                                        방</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="패왕별희 디 오리지널"
+                                                                        data-movie-no="20004800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/04/16/3OHRKnHHelry9f7WY1vM9qghwK48Sr0I_316.jpg">패왕별희
+                                                                        디 오리지널</button></li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="야구소녀" data-movie-no="20019300"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/05/26/4DpEOKISeL20EXabwXkfsfaeeJW27heu_316.jpg">야구소녀</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="라라랜드" data-movie-no="20007800"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/03/11/Qgl73W9FxEMYJnnaOYPFtyqSrqB3vmJ2_316.jpg">라라랜드</button>
+                                                                </li>
+                                                                <li><button type="button" class="btn disabled"
+                                                                        data-movie-nm="찬실이는 복도 많지"
+                                                                        data-movie-no="01695700"
+                                                                        data-img-path="https://img.megabox.co.kr/SharedImg/2020/02/28/Mz9o5hkBM8JVixfUCyZY4NDnkIFTY4pk_316.jpg">찬실이는
+                                                                        복도 많지</button></li>
+                                                            </ul>
+                                                        </div>
+                                                        <div id="mCSB_3_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_3_scrollbar mCS-light mCSB_scrollTools_vertical">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_3_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; display: none; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="poster-section">
+                                        <div class="table">
+                                            <div class="td"><img class="poster" onerror="noImg(this, 'del')"
+                                                    src="https://img.megabox.co.kr/SharedImg/2020/07/07/esjM0Pd6zog3JPl316LvHxJiB1x05o2i_316.jpg"
+                                                    alt="다만 악에서 구하소서"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="masterBrch" class="ltab-layer-cont"><a href="" class="ir"></a>
+                                    <div class="wrap tab-area">
+                                        <div class="tab-list-choice">
+                                            <ul>
+                                                <li><a href="#tab10" title="서울지점 선택" data-area-cd="10"
+                                                        class="on">서울(20)</a></li>
+                                                <li><a href="#tab30" title="경기지점 선택" data-area-cd="30">경기(26)</a></li>
+                                                <li><a href="#tab35" title="인천지점 선택" data-area-cd="35">인천(6)</a></li>
+                                                <li><a href="#tab45" title="대전/충청/세종지점 선택"
+                                                        data-area-cd="45">대전/충청/세종(15)</a></li>
+                                                <li><a href="#tab55" title="부산/대구/경상지점 선택"
+                                                        data-area-cd="55">부산/대구/경상(24)</a></li>
+                                                <li><a href="#tab65" title="광주/전라지점 선택" data-area-cd="65">광주/전라(9)</a>
+                                                </li>
+                                                <li><a href="#tab70" title="강원지점 선택" data-area-cd="70">강원(4)</a></li>
+                                                <li><a href="#tab80" title="제주지점 선택" data-area-cd="80">제주(1)</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="list-section">
+                                            <div id="tab10" class="tab-layer-cont on">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_4 mCS_no_scrollbar">
+                                                    <div id="mCSB_4"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: none;" tabindex="0">
+                                                        <div id="mCSB_4_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1372">강남</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1359">강남대로(씨티)</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1341">강동</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1431">군자</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1003">동대문</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1572">마곡</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1581">목동</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1311">상봉</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1211">상암월드컵경기장</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1331">성수</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1371">센트럴</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1381">송파파크하비오</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1202">신촌</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1221">은평</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1561">이수</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1321">창동</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1351">코엑스</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1212">홍대</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1571">화곡</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="10"
+                                                                        data-brch-no="1562">ARTNINE</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_4_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_4_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_4_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; height: 0px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="tab30" class="tab-layer-cont">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_5 mCS_no_scrollbar">
+                                                    <div id="mCSB_5"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: 200px;" tabindex="0">
+                                                        <div id="mCSB_5_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4121">고양스타필드</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4152">김포한강신도시</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4721">남양주</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4451">동탄</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4652">미사강변</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4113">백석</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4722">별내</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4221">부천스타필드시티</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4631">분당</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4411">수원</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4421">수원남문</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4291">시흥배곧</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4253">안산중앙</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4821">양주</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4431">영통</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="0012">용인기흥</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4462">용인테크노밸리</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4804">의정부민락</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4111">일산</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4104">일산벨라시타</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4112">킨텍스</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4132">파주금촌</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4115">파주운정</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4131">파주출판도시</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4501">평택</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="30"
+                                                                        data-brch-no="4651">하남스타필드</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_5_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_5_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_5_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="tab35" class="tab-layer-cont">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_6 mCS_no_scrollbar">
+                                                    <div id="mCSB_6"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: 200px;" tabindex="0">
+                                                        <div id="mCSB_6_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="35"
+                                                                        data-brch-no="4041">검단</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="35"
+                                                                        data-brch-no="4062">송도</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="35"
+                                                                        data-brch-no="4001">영종</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="35"
+                                                                        data-brch-no="4051">인천논현</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="35"
+                                                                        data-brch-no="4042">청라</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="35"
+                                                                        data-brch-no="4043">청라지젤</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_6_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_6_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_6_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="tab45" class="tab-layer-cont">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_7 mCS_no_scrollbar">
+                                                    <div id="mCSB_7"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: 200px;" tabindex="0">
+                                                        <div id="mCSB_7_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="3141">공주</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="3021">대전</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="0009">대전유성</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="3011">대전중앙로</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="0017">대전현대아울렛</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="3391">세종(조치원)</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="3392">세종나성</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="0008">세종청사</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="3631">오창</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="3901">제천</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="3651">진천</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="3301">천안</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="0013">청주사창</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="3801">충주</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="45"
+                                                                        data-brch-no="3501">홍성내포</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_7_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_7_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_7_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="tab55" class="tab-layer-cont">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_8 mCS_no_scrollbar">
+                                                    <div id="mCSB_8"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: 200px;" tabindex="0">
+                                                        <div id="mCSB_8_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="7602">경북도청</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="7122">경산하양</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="7801">경주</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="7303">구미강동</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="7401">김천</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="7901">남포항</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="7022">대구(칠성로)</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="7011">대구신세계(동대구)</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="7012">대구이시아</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="6161">덕천</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="6312">마산</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="7451">문경</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="6001">부산극장</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="6906">부산대</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="7021">북대구(칠곡)</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="6641">사천</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="6642">삼천포</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="6261">양산</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="6262">양산라피에스타</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="6811">울산</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="6191">정관</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="6421">창원</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="0014">창원내서</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="55"
+                                                                        data-brch-no="6121">해운대(장산)</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_8_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_8_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_8_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="tab65" class="tab-layer-cont">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_9 mCS_no_scrollbar">
+                                                    <div id="mCSB_9"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: 200px;" tabindex="0">
+                                                        <div id="mCSB_9_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="65"
+                                                                        data-brch-no="5021">광주상무</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="65"
+                                                                        data-brch-no="5061">광주하남</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="65"
+                                                                        data-brch-no="5901">남원</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="65"
+                                                                        data-brch-no="5302">목포하당(포르모)</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="65"
+                                                                        data-brch-no="5612">송천</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="65"
+                                                                        data-brch-no="5401">순천</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="65"
+                                                                        data-brch-no="5552">여수웅천</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="65"
+                                                                        data-brch-no="0010">전대(광주)</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="65"
+                                                                        data-brch-no="5064">첨단</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_9_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_9_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_9_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="tab70" class="tab-layer-cont">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_10 mCS_no_scrollbar">
+                                                    <div id="mCSB_10"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: 200px;" tabindex="0">
+                                                        <div id="mCSB_10_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="70"
+                                                                        data-brch-no="2001">남춘천</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="70"
+                                                                        data-brch-no="2171">속초</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="70"
+                                                                        data-brch-no="2201">원주</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="70"
+                                                                        data-brch-no="2202">원주센트럴</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_10_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_10_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_10_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="tab80" class="tab-layer-cont">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_11 mCS_no_scrollbar">
+                                                    <div id="mCSB_11"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: 200px;" tabindex="0">
+                                                        <div id="mCSB_11_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="80"
+                                                                        data-brch-no="6901">제주</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_11_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_11_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_11_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="masterSpclBrch" class="ltab-layer-cont has-img"><a href="" class="ir"></a>
+                                    <div class="wrap tab-area">
+                                        <div class="tab-list-choice">
+                                            <ul>
+                                                <li><a href="#tabDBC" title="Dolby Cinema특별관 선택" data-area-cd="DBC"
+                                                        class="on">Dolby Cinema(1)</a></li>
+                                                <li><a href="#tabTBQ" title="THE BOUTIQUE특별관 선택" data-area-cd="TBQ">THE
+                                                        BOUTIQUE(6)</a></li>
+                                                <li><a href="#tabMX" title="MX특별관 선택" data-area-cd="MX">MX(9)</a></li>
+                                                <li><a href="#tabCFT" title="COMFORT특별관 선택"
+                                                        data-area-cd="CFT">COMFORT(32)</a></li>
+                                                <li><a href="#tabMKB" title="MEGABOX KIDS특별관 선택"
+                                                        data-area-cd="MKB">MEGABOX KIDS(4)</a></li>
+                                                <li><a href="#tabTFC" title="THE FIRST CLUB특별관 선택"
+                                                        data-area-cd="TFC">THE FIRST CLUB(1)</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="list-section">
+                                            <div id="tabDBC" class="tab-layer-cont on">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_12 mCS_no_scrollbar">
+                                                    <div id="mCSB_12"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: none;" tabindex="0">
+                                                        <div id="mCSB_12_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="DBC"
+                                                                        data-brch-no="1351">코엑스</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_12_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_12_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_12_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; height: 0px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="theater-section">
+                                                    <div class="table">
+                                                        <div class="td"> <a href="/specialtheater/dolby"
+                                                                title="DOLBY 특별관 페이지로 이동">
+                                                                <p><strong>DOLBY</strong>국내 최초로 메가박스가 <br>선보이는 세계 최고
+                                                                    <br>기술력의 몰입 시네마</p> <i
+                                                                    class="iconset ico-arrow-half"></i> <img
+                                                                    src="https://img.megabox.co.kr/static/pc/images/reserve/img-theater-dolby.png"
+                                                                    alt="DOLBY 특별관 페이지로 이동" class="poster">
+                                                            </a> </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="tabTBQ" class="tab-layer-cont">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_13 mCS_no_scrollbar">
+                                                    <div id="mCSB_13"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: 200px;" tabindex="0">
+                                                        <div id="mCSB_13_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="TBQ"
+                                                                        data-brch-no="4631">분당</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="TBQ"
+                                                                        data-brch-no="1331">성수</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="TBQ"
+                                                                        data-brch-no="1371">센트럴</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="TBQ"
+                                                                        data-brch-no="4104">일산벨라시타</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="TBQ"
+                                                                        data-brch-no="1351">코엑스</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="TBQ"
+                                                                        data-brch-no="4651">하남스타필드</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_13_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_13_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_13_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="theater-section">
+                                                    <div class="table">
+                                                        <div class="td"> <a href="/specialtheater/boutique"
+                                                                title="THE BOUTIQUE 특별관 페이지로 이동">
+                                                                <p><strong>THE BOUTIQUE</strong>영화를 본다는 것,<br>그 놀라운 경험을
+                                                                    위하여</p> <i class="iconset ico-arrow-half"></i> <img
+                                                                    src="https://img.megabox.co.kr/static/pc/images/reserve/img-theater-boutique.png"
+                                                                    alt="THE BOUTIQUE 특별관 페이지로 이동" class="poster">
+                                                            </a> </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="tabMX" class="tab-layer-cont">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_14 mCS_no_scrollbar">
+                                                    <div id="mCSB_14"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: 200px;" tabindex="0">
+                                                        <div id="mCSB_14_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="MX"
+                                                                        data-brch-no="4121">고양스타필드</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="MX"
+                                                                        data-brch-no="7011">대구신세계(동대구)</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="MX"
+                                                                        data-brch-no="0017">대전현대아울렛</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="MX"
+                                                                        data-brch-no="1581">목동</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="MX"
+                                                                        data-brch-no="1211">상암월드컵경기장</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="MX"
+                                                                        data-brch-no="1331">성수</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="MX"
+                                                                        data-brch-no="4062">송도</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="MX"
+                                                                        data-brch-no="4431">영통</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="MX"
+                                                                        data-brch-no="4651">하남스타필드</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_14_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_14_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_14_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="theater-section">
+                                                    <div class="table">
+                                                        <div class="td"> <a href="/specialtheater/mx"
+                                                                title="MX 특별관 페이지로 이동">
+                                                                <p><strong>MX</strong>진정한 영화 사운드를 통한<br>최고의 영화!
+                                                                    <br>메가박스의 차세대 <br>표준 상영관</p> <i
+                                                                    class="iconset ico-arrow-half"></i> <img
+                                                                    src="https://img.megabox.co.kr/static/pc/images/reserve/img-theater-mx.png"
+                                                                    alt="MX 특별관 페이지로 이동" class="poster">
+                                                            </a> </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="tabCFT" class="tab-layer-cont">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_15 mCS_no_scrollbar">
+                                                    <div id="mCSB_15"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: 200px;" tabindex="0">
+                                                        <div id="mCSB_15_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="4041">검단</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="5021">광주상무</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="5061">광주하남</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="7022">대구(칠성로)</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="3021">대전</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="6161">덕천</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="1003">동대문</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="4451">동탄</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="6312">마산</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="1581">목동</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="4113">백석</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="6906">부산대</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="1311">상봉</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="1211">상암월드컵경기장</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="0008">세종청사</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="4062">송도</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="4291">시흥배곧</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="1202">신촌</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="6261">양산</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="6262">양산라피에스타</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="0012">용인기흥</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="4462">용인테크노밸리</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="6811">울산</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="0014">창원내서</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="3301">천안</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="4043">청라지젤</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="0013">청주사창</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="1351">코엑스</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="4112">킨텍스</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="4132">파주금촌</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="4115">파주운정</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="CFT"
+                                                                        data-brch-no="6121">해운대(장산)</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_15_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_15_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_15_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="theater-section">
+                                                    <div class="table">
+                                                        <div class="td"> <a href="/specialtheater/comfort"
+                                                                title="COMFORT 특별관 페이지로 이동">
+                                                                <p><strong>COMFORT</strong>더욱 편안한 영화 관람을<br>위한 다양한 여유공간
+                                                                </p> <i class="iconset ico-arrow-half"></i> <img
+                                                                    src="https://img.megabox.co.kr/static/pc/images/reserve/img-theater-comfort.png"
+                                                                    alt="COMFORT 특별관 페이지로 이동" class="poster">
+                                                            </a> </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="tabMKB" class="tab-layer-cont">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_16 mCS_no_scrollbar">
+                                                    <div id="mCSB_16"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: 200px;" tabindex="0">
+                                                        <div id="mCSB_16_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="MKB"
+                                                                        data-brch-no="6312">마산</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="MKB"
+                                                                        data-brch-no="4431">영통</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="MKB"
+                                                                        data-brch-no="4651">하남스타필드</button></li>
+                                                                <li><button type="button" class="btn" data-area-cd="MKB"
+                                                                        data-brch-no="6121">해운대(장산)</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_16_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_16_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_16_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="theater-section">
+                                                    <div class="table">
+                                                        <div class="td"> <a href="/specialtheater/megakids"
+                                                                title="MEGA KIDS 특별관 페이지로 이동">
+                                                                <p><strong>MEGA KIDS</strong>아이와 가족이 함께 머물며<br>삶의 소중한
+                                                                    가치를 배우는<br>더 행복한 놀이공간</p> <i
+                                                                    class="iconset ico-arrow-half"></i> <img
+                                                                    src="https://img.megabox.co.kr/static/pc/images/reserve/img-theater-kids.png"
+                                                                    alt="MEGA KIDS 특별관 페이지로 이동" class="poster">
+                                                            </a> </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="tabTFC" class="tab-layer-cont">
+                                                <div class="scroll m-scroll mCustomScrollbar _mCS_17 mCS_no_scrollbar">
+                                                    <div id="mCSB_17"
+                                                        class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside"
+                                                        style="max-height: 200px;" tabindex="0">
+                                                        <div id="mCSB_17_container"
+                                                            class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+                                                            style="position:relative; top:0; left:0;" dir="ltr">
+                                                            <ul class="list">
+                                                                <li><button type="button" class="btn" data-area-cd="TFC"
+                                                                        data-brch-no="4112">킨텍스</button></li>
+                                                            </ul>
+                                                            <div></div>
+                                                        </div>
+                                                        <div id="mCSB_17_scrollbar_vertical"
+                                                            class="mCSB_scrollTools mCSB_17_scrollbar mCS-light mCSB_scrollTools_vertical"
+                                                            style="display: none;">
+                                                            <div class="mCSB_draggerContainer">
+                                                                <div id="mCSB_17_dragger_vertical" class="mCSB_dragger"
+                                                                    style="position: absolute; min-height: 30px; top: 0px;">
+                                                                    <div class="mCSB_dragger_bar"
+                                                                        style="line-height: 30px;"></div>
+                                                                </div>
+                                                                <div class="mCSB_draggerRail"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="theater-section">
+                                                    <div class="table">
+                                                        <div class="td"> <a href="/specialtheater/firstclub"
+                                                                title="THE FIRST CLUB 특별관 페이지로 이동">
+                                                                <p><strong>THE FIRST CLUB</strong>특별한 날,<br>특별한 당신을
+                                                                    위한<br>단 하나의<br>THE FIRST CLUB</p> <i
+                                                                    class="iconset ico-arrow-half"></i> <img
+                                                                    src="https://img.megabox.co.kr/static/pc/images/reserve/img-theater-firstclub.png"
+                                                                    alt="THE FIRST CLUB 특별관 페이지로 이동" class="poster">
+                                                            </a> </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onload=function(){
+            startsc();
+        }
+        function startsc(){
+            $(".mCSB_scrollTools").addClass("startsc");
+        }
+    </script>
+</body>
+
+</html>
